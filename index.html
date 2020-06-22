@@ -1,96 +1,112 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>QUIZ</title>
-  <style>
-  
-    label, input {
-  display: block;
-}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
-* {
-  font-family: Verdana, sans-serif;
-}
-
-html, body {
-  height: 100%;
-  margin: 0;
-  -webkit-app-region: drag;
-}
-.login-form {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-.login-form > div {
-  margin-bottom: 30px;
-}
-
-.login-form > div > label {
-  margin-bottom: 25px;
-  letter-spacing: 5px;
-  font-weight: 100;
-  text-transform: uppercase;
-  font-size: 18px;
-  text-align: center;
-  color: rgba(0, 0, 0, 0.7);
-}
-
-.login-form > div > input {
-  height: 30px;
-  width: 225px;
-  font-size: 16px;
-  -webkit-app-region: no-drag;
-}
-
-.login-form > div > button {
-  border: 0;
-  font-size: 15px;
-  font-weight: 100;
-  text-transform: uppercase;
-  height: 35px;
-  width: 225px;
-  background-color: #2196F3;
-  color: white;
-  -webkit-app-region: no-drag;
-}
-
-button:hover {
-  background-color: #0D47A1;
-}
-
-  
-  </style>
-  
-  <script>
-  
-
-  
-  
-  
-  </script>
-  
-  
-  
 </head>
 <body>
-<form class="login-form" id="login-form">
-  <div>
-    <label for="username-input">Username</label>
-    <input type="text" id="username-input" autofocus/>
-  </div>
-  <div>
-    <label for="password-input">Password</label>
-    <input type="password" id="password-input"/>
-  </div>
-  <div>
-    <button id="submit-form-button" type="submit">Enter</button>
-  </div>
-</form>
-<script src="login.js"></script>
+
+<button>Send an HTTP GET request to a page and get the result back</button>
+
+
+
+
+<p id= "1"><p>
+<p id= "2"><p>
+<p id="3"><p>
+<p id= "4"><p>
+<p id="4"><p>
+
+
+
+
+
+<script>
+
+
+
+
+
+window.onload = function () { 
+
+	$.ajax({
+   		 url:"https://api.ipify.org/?format=jsonp&callback=?",  // replace the url to /getEndpoints
+   		 dataType: "json",
+   		 success:function(data){
+       		           
+       		    var data = [
+	{
+		"id": 1,
+		"name": "Create product",
+		"endpoint": "/create",
+		"payload": "{\"product_Id\":100,\"product_Name\":\"Pencil\",\"product_Category\":\"Stationary\",\"fare\":16}"
+	},
+	{
+		"id": 2,
+		"name": "Get products",
+		"endpoint": "/",
+		"payload": null
+	},
+	{
+		"id": 3,
+		"name": "Get product by id",
+		"endpoint": "/{id}",
+		"payload": null
+	},
+	{
+		"id": 4,
+		"name": "Update product",
+		"endpoint": "/update",
+		"payload": "{\"product_Id\":100,\"product_Name\":\" Camlin Pencil\",\"product_Category\":\"Stationary\",\"fare\":17}"
+	},
+	{
+		"id": 5,
+		"name": "Delete product by id",
+		"endpoint": "/delete/{id}",
+		"payload": null
+	}  
+];                                             // remove this  var data
+
+    
+    
+           for (var i = 0; i < data.length; i++) {
+       			var para = document.createElement("P");
+                para.innerText = "id: " + data[i].id + <br/> + "name: " + data[i].name + "; " + "endpoint: " + data[i].endpoint + "; " + "payload: " + data[i].payload + "; " ;
+                document.body.appendChild(para);
+  
+        
+    }
+           
+            
+            
+            
+   		 }
+}); 
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</script>
 </body>
 </html>
