@@ -8,7 +8,8 @@
 
 
 <body>
-
+<p>1. When the site loads ->> ajax gets endpoints from server as json array</p>
+<p>2. When we click on next button ->> ajax posts the ctdt, ip and gets json response from server with sessionid</p>
 
 <script>
 
@@ -77,7 +78,7 @@ window.onload = function responseFromGetEndpoints() {
                 
                 if (i == getEndpointResp.length-1){ 
                     var btn = document.createElement("BUTTON");   // Create button
-					btn.innerHTML = "-------Click me to get response from /validateUser-------";                   // when you click, it will show responnse from /validateUser 
+					btn.innerHTML = "-------[NEXT]--Click me to get response from /validateUser-------";                   // when you click, it will show responnse from /validateUser 
 					btn.setAttribute("id", "demo");
 					document.body.appendChild(btn); 
                     document.getElementById("demo").addEventListener("click", responseFromValidateUser);
