@@ -1,24 +1,20 @@
 <!DOCTYPE html>
 <html>
+
+
 <head>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 
 
-
-
 <body>
-
 
 
 <script>
 
-window.onload = function responseFromGetEndpointsAndValidateUser() { 
-
-
 // Ajax Get
 
-
+window.onload = function responseFromGetEndpoints() { 
 
 	$.ajax({
    		 url:"https://api.ipify.org/?format=jsonp&callback=?",  // replace the url to /getEndpoints // note: url response must be json
@@ -78,6 +74,17 @@ window.onload = function responseFromGetEndpointsAndValidateUser() {
                 para.innerText ="payload : " + getEndpointResp[i].payload ;
                 document.body.appendChild(para);
                 
+                
+                if (i == getEndpointResp.length-1){ 
+                    var btn = document.createElement("BUTTON");   // Create button
+					btn.innerHTML = "-------Click me to get response from /validateUser-------";                   // when you click, it will show responnse from /validateUser 
+					btn.setAttribute("id", "demo");
+					document.body.appendChild(btn); 
+                    document.getElementById("demo").addEventListener("click", responseFromValidateUser);
+
+                
+                }
+                
   
         
     }
@@ -88,6 +95,26 @@ window.onload = function responseFromGetEndpointsAndValidateUser() {
    		 }
 }); 
 
+
+
+
+
+
+
+
+
+
+
+}
+
+
+
+
+
+
+
+
+function responseFromValidateUser(){
 
 
 
@@ -195,14 +222,18 @@ window.onload = function responseFromGetEndpointsAndValidateUser() {
 
 
 
-
-
-
 }
 
 
-</script>
 
+
+
+
+
+
+
+
+</script>
 
 
 
