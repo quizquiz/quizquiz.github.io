@@ -2,25 +2,30 @@
 <html>
 <head>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-
 </head>
+
+
+
+
 <body>
+
 
 
 <script>
 
+window.onload = function responseFromGetEndpointsAndValidateUser() { 
 
 
+// Ajax Get
 
 
-window.onload = function () { 
 
 	$.ajax({
    		 url:"https://api.ipify.org/?format=jsonp&callback=?",  // replace the url to /getEndpoints // note: url response must be json
    		 dataType: "json",
-   		 success:function(data){
-       		           
-       		    var data = [
+   		 success:function(getEndpointResp){                       // consumes nothing but produces json array
+       		             
+       	getEndpointResp = [
 	{
 		"id": 1,
 		"name": "Create product",
@@ -51,26 +56,26 @@ window.onload = function () {
 		"endpoint": "/delete/{id}",
 		"payload": null
 	}  
-];                                             // remove this  var data
-
+];               // remove this var  when you change above url                                     
+    
     	
           	  var x = document.createElement("H1");
   			  var t = document.createTextNode("Response from /getEndpoints");
 			  x.appendChild(t);
  			  document.body.appendChild(x);
            
-           for (var i = 0; i < data.length; i++) {
+           for (var i = 0; i < getEndpointResp.length; i++) {
        			var para = document.createElement("P");
-                para.innerText = "id : " + data[i].id ;
+                para.innerText = "id : " + getEndpointResp[i].id ;
                 document.body.appendChild(para);
                 var para = document.createElement("P");
-                para.innerText ="name : " + data[i].name;
+                para.innerText ="name : " + getEndpointResp[i].name;
                 document.body.appendChild(para);
                 var para = document.createElement("P");
-                para.innerText ="endpoint : " + data[i].endpoint ;
+                para.innerText ="endpoint : " + getEndpointResp[i].endpoint ;
                 document.body.appendChild(para);
                 var para = document.createElement("P");
-                para.innerText ="payload : " + data[i].payload ;
+                para.innerText ="payload : " + getEndpointResp[i].payload ;
                 document.body.appendChild(para);
                 
   
@@ -84,29 +89,125 @@ window.onload = function () {
 }); 
 
 
+
+
+// Ajax Post 
+
+
+
+
+
+ var input = {               // remove this input since we alrady have a function that translates form inputs to json
+    "userCtdtId": "CT1010101010",
+    "userIpAddress":"10.20.49.20"
+};
+
+    $.ajax({
+        type: "POST",
+        contentType: "application/json",
+        url: "/api/search",
+        data: JSON.stringify(input),
+        dataType: "json",
+        cache: false,
+        timeout: 600000,
+        error: function (getValidateResp) {                      // please change replace the term "error" to "success"
+        
+        
+        getValidateResp = {                                // remove this var initialisation
+    "randomNumber": "7262",
+    "sessionId": "1b0fcc90-7784-4070-879c-0227e11c9c97",
+    "endpointList": [
+        {
+            "id": 1,
+            "name": "get entity",
+            "endpoint": "/7262/getEntity",
+            "payload": "{'name':'shubham'}"
+        },
+        {
+            "id": 2,
+            "name": "save entity",
+            "endpoint": "/7262/saveEntity",
+            "payload": "{'name':'shubham'}"
+        },
+        {
+            "id": 3,
+            "name": "save entity",
+            "endpoint": "/7262/saveEntity",
+            "payload": "{'name':'shubham'}"
+        },
+        {
+            "id": 4,
+            "name": "update entity",
+            "endpoint": "/7262/updateEntity",
+            "payload": "{'name':'shubham'}"
+        },
+        {
+            "id": 5,
+            "name": "delete entity",
+            "endpoint": "/7262/deleteEntity",
+            "payload": "{'name':'shubham'}"
+        }
+    ]
+};
+
+            
+        
+        
+        
+        
+
+              var x = document.createElement("H1");
+  			  var t = document.createTextNode("Response from /validateUser");
+			  x.appendChild(t);
+ 			  document.body.appendChild(x);
+              
+                var para = document.createElement("P");
+                para.innerText = "randomNumber : " + getValidateResp.randomNumber ;
+                document.body.appendChild(para);
+                var para = document.createElement("P");
+                para.innerText = "sessionId : " + getValidateResp.sessionId ;
+                document.body.appendChild(para);
+              
+              
+              
+           
+           for (var i = 0; i < getValidateResp.endpointList.length; i++) {
+       			var para = document.createElement("P");
+                para.innerText = "id : " + getValidateResp.endpointList[i].id ;
+                document.body.appendChild(para);
+                var para = document.createElement("P");
+                para.innerText ="name : " + getValidateResp.endpointList[i].name;
+                document.body.appendChild(para);
+                var para = document.createElement("P");
+                para.innerText ="endpoint : " + getValidateResp.endpointList[i].endpoint ;
+                document.body.appendChild(para);
+                var para = document.createElement("P");
+                para.innerText ="payload : " + getValidateResp.endpointList[i].payload ;
+                document.body.appendChild(para);
+
+
+
+        }
+        
+        }
+    });
+
+
+
+
+
+
+
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 </script>
+
+
+
+
 </body>
+
+
+
 </html>
