@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html>
+<title>Assessment</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+
+.w3-button-mod{
+width:50px;
+padding:2px;
+text-size:20px;
+color:black;
+}
+
+
+.question{
+font-size:16px;
+margin:4px;
+background-color:lavender;
+border: 1px solid black;
+border-radius:5px;
+padding-top:10px;
+padding-bottom:30px;
+padding-left:10px;
+padding-right:7px;
+}
+
+input[type=radio] {
+    width: 20px;
+    height: 20px;
+}
+
+
+.footer {
+   position:absolute;
+   bottom:0;
+   width:100%;
+   height:60px;   /* Height of the footer */
+   background:#6cf;
+}
+
+
+.unselectable {
+		-webkit-touch-callout: none;
+		-webkit-user-select: none;
+		-khtml-user-select: none;
+		-moz-user-select: none;
+		-ms-user-select: none;
+		user-select: none;
+}
+</style>
+
+
+<body class="w3-light-grey" id="body">
+
+<!-- Top container -->
+<div class="w3-bar w3-top w3-black w3-large" style="z-index:4">
+  <button class="w3-bar-item w3-button w3-hide-large w3-hover-none w3-hover-text-light-grey" onclick="w3_open();"><i class="fa fa-bars"></i>  Menu</button>
+  <span class="w3-bar-item w3-right" style="font-size: 13px"  id ="timerHere">timer</span>
+</div>
+
+<!-- Sidebar/menu -->
+<nav class="w3-sidebar w3-collapse w3-white w3-animate-left" style="z-index:3;width:300px;" id="mySidebar"><br>
+  <div class="w3-container w3-row">
+    <div class="w3-col s4">
+      <i class="fa fa-user-circle" style="font-size: 40px"></i>
+    </div>
+    <div class="w3-col s8 w3-bar">
+      <span>Hello <strong id="userNameHere"> </strong></span><br>
+      <strong id="testNameHere"> </strong><br>
+    </div>
+  </div>
+  <hr>
+
+
+  <div class="w3-bar-block">
+  <a href="#" class="w3-bar-item w3-button w3-padding-16 w3-hide-large w3-dark-grey w3-hover-black" onclick="w3_close()" title="close menu"><i class="fa fa-remove fa-fw"></i>  Close Menu</a>
+  </div>
+
+
+<div id="menuPlace">
+</div>
+</nav>
+
+
+
+
+
+<!-- Overlay effect when opening sidebar on small screens -->
+<div class="w3-overlay w3-hide-large w3-animate-opacity" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+
+
+
+
+
+
+
+
+
+
+<!-- !PAGE CONTENT! -->
+<div class="w3-main" style="margin-left:300px;margin-top:43px;">
+<br>
+
+
+<div id="questionPlace" class="unselectable"></div>
+
+
+<br><br><br><div class="container"><a class="btn btn-danger pull-right" href="/redirect" >Exit Test</a></div>
+
+
+
+
+
+
+
+<p class="footer">**Double click on an option to unselect it.</p>
+
+
+
+
+
+
+
+</div>
+
+
+<script>
+// Get the Sidebar
+var mySidebar = document.getElementById("mySidebar");
+
+// Get the DIV with overlay effect
+var overlayBg = document.getElementById("myOverlay");
+
+// Toggle between showing and hiding the sidebar, and add overlay effect
+function w3_open() {
+  if (mySidebar.style.display === 'block') {
+    mySidebar.style.display = 'none';
+    overlayBg.style.display = "none";
+  } else {
+    mySidebar.style.display = 'block';
+    overlayBg.style.display = "block";
+  }
+}
+
+// Close the sidebar with the close button
+function w3_close() {
+  mySidebar.style.display = "none";
+  overlayBg.style.display = "none";
+}
+
+
+var aws = "http://oats-env.eba-wxq2yqes.ap-south-1.elasticbeanstalk.com";
+
+
+
+
+
+var url = new URL(window.location.href);
+var search_params = url.searchParams; 
+var testCode = search_params.get('testCode');
+console.log(testCode);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+window.onload = getTestDetails();
+
+
+var testDetails = {};
+var generatedList = [];
+var questionDetails = {};
+var index = 1;
+var sqlEndTime;
+
+
+
+
+
+
+
+function getTestDetails(){
+	
+	
+	
+	$.ajax({
+        type: "GET",
+        dataType: "json",
+        url: aws + "/student/details",
+        success: function(s) {
+        	
+          document.getElementById("userNameHere").innerHTML = s.name;
+          console.log(s);
+
+        }
+     });
+	
+	
+	
+	
+	$.ajax({
+		type: "GET",
+		dataType: "json",
+		url: aws + "/student/test/details/" + testCode,
+		success: function(s){
+			testDetails = s;
+			console.log(s);
+			document.getElementById("testNameHere").innerHTML = s.testName;
+			
+			var sqlDate = s.startDate.split("-");
+			var sqlStartTime = s.startTime.split(":")
+			var startTime = new Date(sqlDate[0], sqlDate[1]-1, sqlDate[2], sqlStartTime[0], sqlStartTime[1], sqlStartTime[2]);
+			
+			if ( new Date() < startTime ) {
+				alert("The test has not started yet.");
+
+			}else{
+				var endTime = s.endTime.split(":");
+				sqlEndTime = new Date(sqlDate[0], sqlDate[1]-1, sqlDate[2], endTime[0], endTime[1], endTime[2]);
+				generateStudentQuestions();
+				timer();
+			}
+		},
+		error: function(){
+			alert("error");
+		}
+	});
+}
+
+
+
+function timer(){
+
+	var countDownDate = sqlEndTime;
+
+	// Update the count down every 1 second
+	var x = setInterval(function() {
+
+	  // Get today's date and time
+	  var now = new Date().getTime();
+	    
+	  // Find the distance between now and the count down date
+	  var distance = countDownDate - now;
+	    
+	  // Time calculations for days, hours, minutes and seconds
+	  var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+	  var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+	  var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+	  var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+	    
+	  // Output the result in an element with id="demo"
+	  document.getElementById("timerHere").innerHTML = hours + "h "
+	  + minutes + "m " + seconds + "s remaining";
+	    
+	  // If the count down is over, write some text 
+	  if (distance < 0) {
+	    clearInterval(x);
+	    document.getElementById("timerHere").innerHTML = "EXPIRED";
+	    alert("The assessment is finshed!");
+	    window.close();
+	  }
+	}, 1000);
+	
+}
+
+
+	
+	
+
+function generateStudentQuestions(){
+		
+		
+		$.ajax({
+			type: "GET",
+			dataType: "json",
+			url: aws + "/student/generate/questions/" + testCode,
+			success: function(s){
+				generatedList = s;
+				populateMenuPlace();
+				document.getElementById("btn"+index).click();
+			},
+			error: function(){
+				alert("error");
+			}
+		});	
+}
+		
+		
+
+function populateMenuPlace(){
+	
+	var str = '<div style="margin-left:7px"><h4 style="margin-left:7px" >Questions</h4>';
+	for (var i = 0; i < generatedList.length; i++) {
+		
+		if (generatedList[i].selectedChoice == "" || generatedList[i].selectedChoice == null) {
+			
+			if (generatedList[i].questionIndex == index) {
+				str += '<button id="btn'+generatedList[i].questionIndex+'" onclick="show('+ generatedList[i].questionId +',event)" style="margin:7px" class="w3-button-mod w3-round w3-border-red">'+generatedList[i].questionIndex+'</button>';
+			}else{
+				str += '<button id="btn'+generatedList[i].questionIndex+'" onclick="show('+ generatedList[i].questionId +',event)" style="margin:7px" class="w3-button-mod w3-round ">'+generatedList[i].questionIndex+'</button>';
+			}
+		}else if (generatedList[i].selectedChoice != "") {
+			if (generatedList[i].questionIndex == index) {
+				str += '<button id="btn'+generatedList[i].questionIndex+'" onclick="show('+ generatedList[i].questionId +',event)" style="margin:7px" class="w3-button-mod w3-round  w3-green w3-border-red">'+generatedList[i].questionIndex+'</button>';
+			}else{
+				str += '<button id="btn'+generatedList[i].questionIndex+'" onclick="show('+ generatedList[i].questionId +',event)" style="margin:7px" class="w3-button-mod w3-round  w3-green">'+generatedList[i].questionIndex+'</button>';
+			}
+		}
+		
+	}
+	str += '</div>';
+	
+	document.getElementById("menuPlace").innerHTML = str;
+	
+	
+}
+		
+
+
+
+
+var choices = [];
+
+function show(questionId, event){
+	
+	index = parseInt(event.target.id.match(/(\d+)/)[0]);
+	
+	populateMenuPlace();
+	
+			$.ajax({
+				type: "GET",
+				dataType: "json",
+				url: aws + "/student/fetch/question/details/" + testCode + "/" + questionId,
+				success: function(s){
+					questionDetails = s;
+					choices = questionDetails.choices.split("_mjhzsgdf_");
+					
+					var str  = '<div class="question">Question '+ index +' : <br><br><xmp>'+ questionDetails.questionString +'</xmp><hr>';
+					
+					for (var j = 0; j < generatedList.length; j++) {
+						
+						if (generatedList[j].questionId == questionId) {
+							for (var i = 0; i < choices.length; i++) {
+								
+								if (generatedList[j].selectedChoice == choices[i]) {
+									str += '<input type="radio" id="opt'+i+'" ondblclick="this.checked = !this.checked"  name="opt"  checked><label style="margin-left:10px;" for="opt'+i+'"><xmp>'+ choices[i] +'</xmp></label><br><br>';
+
+								}else {
+									str += '<input type="radio" id="opt'+i+'" ondblclick="this.checked = !this.checked" name="opt" ><label style="margin-left:10px;" for="opt'+i+'"><xmp>'+ choices[i] +'</xmp></label><br><br>';
+								}
+						   }
+						}
+				     }
+						
+						
+						
+					
+					str += '</div><br><div class="container">';
+					str += '<button class="btn btn-success pull-right" onclick="save('+questionId+') " >Save & Next</button>';
+					str += '<button class="btn btn-warning pull-left" onclick="prev('+questionId+') " >Prev</button></div>';
+					
+					document.getElementById("questionPlace").innerHTML = str;
+
+				},
+				error: function(){
+					alert("error");
+				}
+			});
+}
+
+
+			
+function save(questionId){
+	
+	if (index < testDetails.totalQuestions ) {
+		index = index+1;
+	}
+	
+	
+	var ele = document.getElementsByName('opt'); 
+	var opt = "";
+    
+    for(i = 0; i < ele.length; i++) { 
+        if(ele[i].checked) 
+        opt = choices[i];
+    } 
+	
+	var questionData = {
+		"testCode":testCode,
+		"questionId":questionId,
+		"selectedChoice":opt
+	};
+	
+	$.ajax({
+		type: "PUT",
+		contentType:"application/json",
+		data: JSON.stringify(questionData),
+		dataType: "json",
+		url:  aws + "/student/save/question/choice",
+		success: function(s){
+			generateStudentQuestions();
+		},
+		error: function(){
+			alert("error");
+		}
+	});
+}
+
+function prev(questionId){
+	if (index > 1) {
+		index = index - 1;
+	}
+	generateStudentQuestions();
+}
+
+
+function exit(){
+	
+	 var r = confirm("Are you sure you want to exit?");
+		
+	  if (r) {
+		  document.getElementById("body").innerHTML = 
+			  '<br><br><br><br><div class="container" style="text-align:center">**Thank you for attending this assessment. Test results will be available once the test time expires.</div>';
+	  }
+	
+	
+}
+
+
+
+
+
+
+
+</script>
+
+
+
+<script >
+
+var myRadios = document.getElementsByName('opt');
+var setCheck;
+var x = 0;
+for(x = 0; x < myRadios.length; x++){
+	
+	console.log("radio" + x);
+    myRadios[x].onclick = function(){
+        if(setCheck != this){
+             setCheck = this;
+        }else{
+            this.checked = false;
+            setCheck = null;
+    }
+    };
+}
+
+</script>
+
+
+
+
+</body>
+</html>
